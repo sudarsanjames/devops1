@@ -1,5 +1,5 @@
 - name: install nginx
-  hosts: localhost
+  hosts: JEN
   tasks:
     - name: install nginx in ubuntu
       apt: name=nginx state=present update_cache=yes

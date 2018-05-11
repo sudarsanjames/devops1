@@ -1,0 +1,37 @@
+[all]
+172.17.0.2 ansible_port=3001
+172.17.0.3 ansible_port=3002
+172.17.0.4  ansible_port=3003
+172.17.0.5 ansible_port=2001
+172.17.0.6 ansible_port=2002
+172.17.0.7 ansible_port=2003
+
+[centos1]
+172.17.0.2 ansible_port=3001
+
+[centos2]
+172.17.0.3 ansible_port=3002
+
+[centos3]
+172.17.0.4 ansible_port=3003
+
+[centos-all]
+172.17.0.2 ansible_port=3001
+172.17.0.3 ansible_port=3002
+172.17.0.4 ansible_port=3003
+
+[ubuntu-all]
+172.17.0.5 ansible_port=2001
+172.17.0.6 ansible_port=2002
+172.17.0.7 ansible_port=2002
+
+[JEN]
+ser1 ansible_port=3302
+ser2 ansible_port=3303
+ser3 ansible_port=2202
+ser4 ansible_port=2203
+
+[all:vars]
+ansible_host=localhost
+ansible_user=root
+ansible_password=root 
