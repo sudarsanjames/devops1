@@ -1,0 +1,31 @@
+---
+
+- name: Provisioning docker containers
+  hosts: localhost
+  tasks:
+   - name: start ubuntu docker container
+     docker_container:
+        image: james/ansible-ubuntu-1
+        name: "ubuntu{{item}}"
+        state: started #started   #absent
+        ports:
+           - "300{{item}}:22"
+           - "400{{item}}:80"  
+     with_sequence: start=2 end=3
+
+   - name: start centos docker container
+     docker_container:
+        image: james/ansible-centos
+        state: started #started #present  #absent
+        name: "centos{{item}}"
+        ports:
+           - "200{{item}}:22"
+           - "100{{item}}:80"  
+     with_sequence: start=2 end=3
+
+
+#yum install epel-release
+#yum install python-pip
+#pip install docker.py
+
+#ansible-doc docker_container

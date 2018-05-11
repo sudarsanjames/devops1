@@ -1,0 +1,64 @@
+- name: install nginx
+  hosts: localhost
+  tasks:
+    - name: install nginx in ubuntu
+      apt: name=nginx state=present update_cache=yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install epel-release in centos
+      yum: name=epel-release state=latest
+      when: ansible_distribution == "CentOS"
+
+    - name: install nginx in centos
+      yum: name=nginx state=latest
+      when: ansible_distribution == "CentOS"
+
+    - name: configure nginx webserver in ubuntu
+      copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+      when: ( ansible_distribution == "Ubuntu" and ansible_os_family == "Debian" )
+
+    - name: configure nginx webserver in centos
+      copy: src=nginx.conf.centos dest=/etc/nginx/nginx.conf
+      when: ( ansible_distribution == "CentOS" and ansible_os_family == "RedHat" )
+
+    - name: make dir in ubuntu
+      shell: "mkdir -p /var/html "
+    - shell: "chmod 777 /var/html "
+      when: ( ansible_distribution == "Ubuntu" and ansible_os_family == "Debian" )
+
+    - name: make dir in centos
+      shell: "mkdir -p /usr/share/html && chmod 777 /usr/share/html"
+      when: ( ansible_distribution == "CentOS" and ansible_os_family == "RedHat" )
+
+    - name: copy conf ubuntu
+      copy: src=default dest=/etc/nginx/sites-available/default
+      when: ( ansible_distribution == "Ubuntu" and ansible_os_family == "Debian" )
+
+    - name: copy conf centos
+      copy: src=default.conf dest=/etc/nginx/conf.d/default.conf
+      when: ( ansible_distribution == "CentOS" and ansible_os_family == "RedHat" )
+
+    - name: push index page to ubuntu
+      template: src=index.html.j2 dest=/var/html/index.html
+    - template: src=index.html.j2 dest=/var/html/index2.html
+      when: ( ansible_distribution == "Ubuntu" and ansible_os_family == "Debian" )
+      notify:
+         - restart nginx ubuntu
+
+    - name: push index page to centos
+      template: "src=index.html.j2 dest=/usr/share/html/index.html "
+    - template: "src=index.html.j2 dest=/usr/share/html/index2.html "
+      when: ( ansible_distribution == "CentOS" and ansible_os_family == "RedHat" )
+      notify:
+         - restart nginx centos
+
+  handlers:
+    - name: restart nginx ubuntu
+      command: service nginx restart
+      when: ( ansible_distribution == "Ubuntu" and ansible_os_family == "Debian" )
+
+    - name: restart nginx centos
+      service: "name=nginx state=restarted"
+      when: ( ansible_distribution == "CentOS" and ansible_os_family == "RedHat" )
+
+
